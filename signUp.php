@@ -7,6 +7,26 @@
     <title>Sing Up</title>
 </head>
 <body>
+    <?php
+        require('./connection.php');
+        if (!empty($firstName) && !empty($lastName) && !empty($email) && !empty($password)) {  
+            if ($password === $confirmPassword) {  
+                // Hash the password  
+                $hashedPassword = password_hash($password, PASSWORD_DEFAULT);  
+                $p = crud::connect()->prepare('INSERT INTO tbl_crudform(firstName,lastName,email,pw) VALUES(:f,:l,:e,:p)');  
+                $p->bindValue(':f', $firstName);  
+                $p->bindValue(':l', $lastName);  
+                $p->bindValue(':e', $email);  
+                $p->bindValue(':p', $hashedPassword);  
+                $p->execute();  
+                echo 'Successfully registered';  
+            } else {  
+                echo 'Passwords do not match';  
+            }  
+        } else {  
+            echo 'All fields are required';  
+        }  
+    ?>
     <div class="form">
         <div class="title">
             <p>Sign Up</p>
